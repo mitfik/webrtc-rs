@@ -2827,6 +2827,76 @@ fn rtc_configuration_cpu_adaptation_round_trip() {
 }
 
 #[test]
+fn rtc_configuration_dscp_round_trip() {
+    let mut config = PeerConnectionRtcConfiguration::new();
+
+    // 既定値は libwebrtc の既定値 (MediaConfig::enable_dscp の true) がそのまま見えることを確認する。
+    assert!(config.dscp(), "生成直後の dscp が true ではありません");
+
+    // 無効にすると false が見えることを確認する。
+    config.set_dscp(false);
+    assert!(
+        !config.dscp(),
+        "set_dscp(false) 後の dscp が false ではありません"
+    );
+
+    // 有効に戻すと true に戻ることを確認する。
+    config.set_dscp(true);
+    assert!(
+        config.dscp(),
+        "set_dscp(true) 後の dscp が true ではありません"
+    );
+}
+
+#[test]
+fn rtc_configuration_audio_jitter_buffer_round_trip() {
+    let mut config = PeerConnectionRtcConfiguration::new();
+
+    // 既定値は libwebrtc の既定値がそのまま見えることを確認する。
+    // max_packets の既定値は kDefaultAudioJitterBufferMaxPackets (200) である。
+    assert_eq!(
+        config.audio_jitter_buffer_max_packets(),
+        200,
+        "生成直後の audio_jitter_buffer_max_packets が 200 ではありません"
+    );
+    assert!(
+        !config.audio_jitter_buffer_fast_accelerate(),
+        "生成直後の audio_jitter_buffer_fast_accelerate が false ではありません"
+    );
+    assert_eq!(
+        config.audio_jitter_buffer_min_delay_ms(),
+        0,
+        "生成直後の audio_jitter_buffer_min_delay_ms が 0 ではありません"
+    );
+
+    // 設定した値がそのまま読み出せることを確認する。
+    config.set_audio_jitter_buffer_max_packets(10);
+    config.set_audio_jitter_buffer_fast_accelerate(true);
+    config.set_audio_jitter_buffer_min_delay_ms(40);
+    assert_eq!(
+        config.audio_jitter_buffer_max_packets(),
+        10,
+        "set_audio_jitter_buffer_max_packets(10) 後の値が 10 ではありません"
+    );
+    assert!(
+        config.audio_jitter_buffer_fast_accelerate(),
+        "set_audio_jitter_buffer_fast_accelerate(true) 後の値が true ではありません"
+    );
+    assert_eq!(
+        config.audio_jitter_buffer_min_delay_ms(),
+        40,
+        "set_audio_jitter_buffer_min_delay_ms(40) 後の値が 40 ではありません"
+    );
+
+    // fast_accelerate を無効に戻すと false に戻ることを確認する。
+    config.set_audio_jitter_buffer_fast_accelerate(false);
+    assert!(
+        !config.audio_jitter_buffer_fast_accelerate(),
+        "set_audio_jitter_buffer_fast_accelerate(false) 後の値が false ではありません"
+    );
+}
+
+#[test]
 fn tls_cert_policy_round_trip() {
     assert_eq!(
         TlsCertPolicy::from_int(TlsCertPolicy::Secure.to_int()),

@@ -573,6 +573,80 @@ impl PeerConnectionRtcConfiguration {
         }
     }
 
+    /// 送信する RTP / RTCP パケットに DSCP を付与する機能が有効かどうかを返す。
+    pub fn dscp(&self) -> bool {
+        unsafe { ffi::webrtc_PeerConnectionInterface_RTCConfiguration_dscp(self.raw.as_ptr()) != 0 }
+    }
+
+    /// 送信する RTP / RTCP パケットに DSCP を付与する機能の有効 / 無効を設定する。
+    ///
+    /// 付与される DSCP の値は RtpEncodingParameters の network_priority で決まる。
+    pub fn set_dscp(&mut self, enable: bool) {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_set_dscp(
+                self.raw.as_ptr(),
+                enable as i32,
+            );
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) が保持できる最大パケット数を返す。
+    pub fn audio_jitter_buffer_max_packets(&self) -> i32 {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_get_audio_jitter_buffer_max_packets(
+                self.raw.as_ptr(),
+            )
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) が保持できる最大パケット数を設定する。
+    pub fn set_audio_jitter_buffer_max_packets(&mut self, value: i32) {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_set_audio_jitter_buffer_max_packets(
+                self.raw.as_ptr(),
+                value,
+            );
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) の高速な加速処理が有効かどうかを返す。
+    pub fn audio_jitter_buffer_fast_accelerate(&self) -> bool {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_get_audio_jitter_buffer_fast_accelerate(
+                self.raw.as_ptr(),
+            ) != 0
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) の高速な加速処理の有効 / 無効を設定する。
+    pub fn set_audio_jitter_buffer_fast_accelerate(&mut self, enable: bool) {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_set_audio_jitter_buffer_fast_accelerate(
+                self.raw.as_ptr(),
+                enable as i32,
+            );
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) の最小遅延をミリ秒で返す。
+    pub fn audio_jitter_buffer_min_delay_ms(&self) -> i32 {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_get_audio_jitter_buffer_min_delay_ms(
+                self.raw.as_ptr(),
+            )
+        }
+    }
+
+    /// 音声のジッターバッファ (NetEq) の最小遅延をミリ秒で設定する。
+    pub fn set_audio_jitter_buffer_min_delay_ms(&mut self, value: i32) {
+        unsafe {
+            ffi::webrtc_PeerConnectionInterface_RTCConfiguration_set_audio_jitter_buffer_min_delay_ms(
+                self.raw.as_ptr(),
+                value,
+            );
+        }
+    }
+
     /// servers の読み取り専用の借用を返す。寿命は self に束縛される。
     pub fn servers(&self) -> IceServerVectorRef<'_> {
         let raw = expect_non_null(

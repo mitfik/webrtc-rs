@@ -11,6 +11,14 @@
 
 ## develop
 
+- [ADD] `PeerConnectionRtcConfiguration` に音声のジッターバッファ (NetEq) と DSCP の設定を追加する
+  - `audio_jitter_buffer_max_packets` / `set_audio_jitter_buffer_max_packets` を追加する
+  - `audio_jitter_buffer_fast_accelerate` / `set_audio_jitter_buffer_fast_accelerate` を追加する
+  - `audio_jitter_buffer_min_delay_ms` / `set_audio_jitter_buffer_min_delay_ms` を追加する
+  - `dscp` / `set_dscp` を追加する
+  - C API に `webrtc_PeerConnectionInterface_RTCConfiguration_{get,set}_audio_jitter_buffer_{max_packets,fast_accelerate,min_delay_ms}` と `webrtc_PeerConnectionInterface_RTCConfiguration_{dscp,set_dscp}` を追加する
+  - @mitfik
+
 ## 0.157.0
 
 **リリース日**: 2026-11-11
